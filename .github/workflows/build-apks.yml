@@ -1,0 +1,33 @@
+name: Build QuizCounter APKs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Build Admin and User APKs
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: "8.9"
+          arguments: "-p android :admin:assembleDebug :user:assembleDebug"
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: QuizCounter-APKs
+          path: |
+            android/admin/build/outputs/apk/debug/*.apk
+            android/user/build/outputs/apk/debug/*.apk
