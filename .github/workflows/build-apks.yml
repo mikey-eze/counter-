@@ -18,11 +18,13 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Build Admin and User APKs
-        uses: gradle/gradle-build-action@v3
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.9"
-          arguments: "-p android :admin:assembleDebug :user:assembleDebug"
+
+      - name: Build Admin and User APKs
+        run: gradle -p android :admin:assembleDebug :user:assembleDebug --stacktrace
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
